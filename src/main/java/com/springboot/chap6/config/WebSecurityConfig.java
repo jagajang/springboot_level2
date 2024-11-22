@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -65,26 +66,30 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, // HttpSecurity not used
+    public AuthenticationManager authenticationManager(// HttpSecurity http, // HttpSecurity not used
                                                        BCryptPasswordEncoder bCryptPasswordEncoder,
                                                        UserDetailService userDetailService) throws Exception {
-        // This return statement is commented out because recommanded format changed since Spring Security 6.1 and later.
-        return http
+        // This return statement is commented out because recommended format changed since Spring Security 6.1 and later.
+        /*return http
                 .getSharedObject(AuthenticationManagerBuilder.class)
                 .userDetailsService(userDetailService)
                 .passwordEncoder(bCryptPasswordEncoder)
                 .and()
-                .build();
+                .build();*/
 
-        // has error
-        /*AuthenticationManagerBuilder authenticationManagerBuilder =
-                new AuthenticationManagerBuilder(null);
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                new AuthenticationManagerBuilder(new ObjectPostProcessor<>() {
+                @Override
+                public <O> O postProcess(O object) {
+                    return object; // No additional processing needed
+                }
+            });
 
         authenticationManagerBuilder
                 .userDetailsService(userDetailService)
                 .passwordEncoder(bCryptPasswordEncoder);
 
-        return authenticationManagerBuilder.build();*/
+        return authenticationManagerBuilder.build();
     }
 
     @Bean
