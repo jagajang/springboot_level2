@@ -77,13 +77,13 @@ public class WebSecurityConfig {
                 .and()
                 .build();*/
 
-        AuthenticationManagerBuilder authenticationManagerBuilder =
-                new AuthenticationManagerBuilder(new ObjectPostProcessor<>() {
-                @Override
-                public <O> O postProcess(O object) {
-                    return object; // No additional processing needed
-                }
-            });
+        AuthenticationManagerBuilder authenticationManagerBuilder = new AuthenticationManagerBuilder(
+                new ObjectPostProcessor<>() {
+                    @Override
+                    public <O> O postProcess(O object) {
+                        return object; // No additional processing needed
+                    }
+                });
 
         authenticationManagerBuilder
                 .userDetailsService(userDetailService)
